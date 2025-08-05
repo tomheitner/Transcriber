@@ -11,7 +11,7 @@ A local implementation of speaker diarization using Whisper for transcription, i
 
 2. **Run the system**:
    ```bash
-   python simple_diarization_no_auth.py
+   python diarization.py
    ```
 
 3. **Check results**:
@@ -32,7 +32,7 @@ A local implementation of speaker diarization using Whisper for transcription, i
 
 ```
 speaker_diarization_release/
-├── simple_diarization_no_auth.py  # Main script (ready to use)
+├── diarization.py  # Main script (ready to use)
 ├── demo.py                        # System overview and demo
 ├── requirements.txt               # Python dependencies
 ├── README.md                     # This file
@@ -63,7 +63,7 @@ speaker_diarization_release/
 
 ### Basic Usage:
 ```bash
-python simple_diarization_no_auth.py
+python diarization.py
 ```
 
 ### Demo:
@@ -73,7 +73,7 @@ python demo.py
 
 ### Programmatic Usage:
 ```python
-from simple_diarization_no_auth import SimpleSpeakerDiarizationNoAuth
+from diarization import SimpleSpeakerDiarizationNoAuth
 
 # Initialize
 diarizer = SimpleSpeakerDiarizationNoAuth()
@@ -144,4 +144,4 @@ This implementation is for educational and research purposes. Please respect the
 
 ---
 
-**Ready to use!** 🎤 Just run `python simple_diarization_no_auth.py` to get started. 
+**Ready to use!** 🎤 Just run `python diarization.py` to get started. 
