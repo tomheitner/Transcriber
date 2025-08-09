@@ -140,19 +140,21 @@ class SimpleSpeakerDiarizationNoAuth:
         
         print(f"Visualization saved to: {output_path}")
     
-    def save_results(self, segments, output_path="transcription_results.json"):
+    def save_results(self, segments, output_path="transcription_results.json", timing_info=None):
         """
         Save transcription results to JSON file.
         
         Args:
             segments: List of segments
             output_path: Path to save the results
+            timing_info: Dictionary containing timing information
         """
         print(f"Saving results to: {output_path}")
         
         results = {
             'timestamp': datetime.now().isoformat(),
-            'segments': segments
+            'segments': segments,
+            'timing': timing_info
         }
         
         with open(output_path, 'w', encoding='utf-8') as f:
@@ -171,25 +173,46 @@ class SimpleSpeakerDiarizationNoAuth:
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
         
+        # Start timing
+        start_time = datetime.now()
+        
         # Perform transcription with timestamps
         transcription_segments = self.transcribe_with_timestamps(audio_path)
+        
+        # End timing
+        end_time = datetime.now()
+        processing_duration = (end_time - start_time).total_seconds()
+        
+        # Calculate timing metrics
+        timing_info = {
+            'start_time': start_time.isoformat(),
+            'end_time': end_time.isoformat(),
+            'duration_seconds': processing_duration
+        }
         
         # Perform simple speaker separation
         speaker_segments = self.simple_speaker_separation(transcription_segments)
         
+
+        # Seperate directory for output per audio file
+        audio_filename = os.path.splitext(os.path.basename(audio_path))[0]
+        audio_output_dir = os.path.join(output_dir, audio_filename)
+        os.makedirs(audio_output_dir, exist_ok=True)
+
         # Create visualization
-        viz_path = os.path.join(output_dir, "transcription_plot.png")
+        viz_path = os.path.join(audio_output_dir, "transcription_plot.png")
         self.visualize_transcription(speaker_segments, viz_path)
         
-        # Save results
-        results_path = os.path.join(output_dir, "transcription_results.json")
-        self.save_results(speaker_segments, results_path)
+        # Save results with timing information
+        results_path = os.path.join(audio_output_dir, "transcription_results.json")
+        self.save_results(speaker_segments, results_path, timing_info)
         
-        # Print summary
+        # Print summary with timing
         print("\n" + "="*50)
         print("PROCESSING COMPLETE")
         print("="*50)
         print(f"Audio file: {audio_path}")
+        print(f"Processing time: {processing_duration:.2f} seconds")
         print(f"Number of transcription segments: {len(transcription_segments)}")
         print(f"Number of speaker segments: {len(speaker_segments)}")
         print(f"Results saved to: {output_dir}")
@@ -228,4 +251,4 @@ def main():
         print(f"Data directory '{data_dir}' not found. Please place audio files in the data directory.")
 
 if __name__ == "__main__":
-    main() 
+    main()
